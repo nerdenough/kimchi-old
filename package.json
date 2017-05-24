@@ -10,7 +10,7 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-node src",
-    "test": "gulp mocha"
+    "test": "gulp eslint && gulp mocha"
   },
   "dependencies": {
     "aws-sdk": "^2.56.0",
@@ -32,6 +32,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1",
     "gulp-mocha": "^4.3.1",
     "mocha": "^3.4.1",
     "sinon": "^2.3.1",
