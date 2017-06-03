@@ -32,7 +32,7 @@ async function provisionLambda () {
         Publish: true
       }).promise()
     })
-    .catch(() => {
+    .catch(async () => {
       gutil.log(gutil.colors.cyan(`[λ] Function "${functionName}" does not exist`))
       const params = {
         Code: {
@@ -46,7 +46,17 @@ async function provisionLambda () {
       }
 
       gutil.log(gutil.colors.cyan(`[λ] Creating lambda function "${functionName}"`))
-      return lambda.createFunction(params).promise()
+      await lambda.createFunction(params).promise()
+
+      gutil.log(gutil.colors.cyan(`[λ] Allowing lex to invoke "${functionName}"`))
+      const permission = {
+        Action: 'lambda:invokeFunction',
+        FunctionName: functionName,
+        Principal: 'lex.amazonaws.com',
+        SourceArn: `arn:aws:lex:us-east-1:${process.env.AWS_ACCOUNT_ID}:intent:*:*`,
+        StatementId: 'allow-lex-invocation'
+      }
+      return lambda.addPermission(permission).promise()
     })
 }
 
