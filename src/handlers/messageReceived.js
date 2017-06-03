@@ -8,10 +8,10 @@ export async function handleMessage (message, client) {
 
   const lexRuntime = new AWS.LexRuntime()
   const params = {
-    botAlias: config.get('lex.botAlias'),
-    botName: config.get('lex.botName'),
-    inputText: message.content,
-    userId: config.get('lex.userId')
+    botName: config.get('bot.name'),
+    botAlias: config.get('bot.alias'),
+    userId: config.get('bot.userId'),
+    inputText: message.content
   }
 
   try {
