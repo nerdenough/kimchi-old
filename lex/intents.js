@@ -10,7 +10,11 @@ const intents = [{
     `Yo ${botName}`
   ],
   fulfillmentActivity: {
-    type: 'ReturnIntent'
+    type: 'CodeHook',
+    codeHook: {
+      messageVersion: '1.0',
+      uri: process.env.AWS_LAMBDA_ARN
+    }
   }
 }]
 
