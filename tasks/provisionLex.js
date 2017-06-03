@@ -6,36 +6,47 @@ import intents from '../lex/intents'
 async function provisionLex () {
   const lexModelBuildingService = new AWS.LexModelBuildingService()
 
+  // Ensure all the intents are created before creating the bot itself
   await Promise.all(intents.map(async intent => {
     gutil.log(gutil.colors.cyan(`[Lex] Checking whether intent "${intent.name}" exists`))
-    const existingIntent = await lexModelBuildingService.getIntent({
-      name: intent.name,
-      version: '$LATEST'
-    }).promise().catch((err) => gutil.log(gutil.colors.red(`[Lex] ${err.message}`)))
-
-    gutil.log(gutil.colors.cyan(`[Lex] Creating intent "${intent.name}"`))
-    if (existingIntent) {
-      gutil.log(gutil.colors.cyan(`[Lex] Intent "${intent.name}" already exists, updating`))
-      intent.checksum = existingIntent.checksum
-    }
+    await lexModelBuildingService
+      .getIntent({
+        name: intent.name,
+        version: '$LATEST'
+      })
+      .promise()
+      .then((existingIntent) => {
+        gutil.log(gutil.colors.cyan(`[Lex] Intent "${intent.name}" already exists`))
+        gutil.log(gutil.colors.cyan(`[Lex] Updating intent "${intent.name}"`))
+        intent.checksum = existingIntent.checksum
+      })
+      .catch(() => {
+        gutil.log(gutil.colors.cyan(`[Lex] Intent "${intent.name}" does not exist`))
+        gutil.log(gutil.colors.cyan(`[Lex] Creating intent "${intent.name}"`))
+      })
 
     await lexModelBuildingService.putIntent(intent).promise()
-    await lexModelBuildingService.createIntentVersion({ name: intent.name }).promise()
+    return lexModelBuildingService.createIntentVersion({ name: intent.name }).promise()
   }))
 
   gutil.log(gutil.colors.cyan(`[Lex] Checking whether bot "${bot.name}" exists`))
-  const existingBot = await lexModelBuildingService.getBot({
-    name: 'kimchi',
-    versionOrAlias: '$LATEST'
-  }).promise().catch((err) => gutil.log(gutil.colors.red(`[Lex] ${err.message}`)))
+  await lexModelBuildingService
+    .getBot({
+      name: 'kimchi',
+      versionOrAlias: '$LATEST'
+    })
+    .promise()
+    .then((existingBot) => {
+      gutil.log(gutil.colors.cyan(`[Lex] Bot "${bot.name}" already exists`))
+      gutil.log(gutil.colors.cyan(`[Lex] Updating bot "${bot.name}"`))
+      bot.checksum = existingBot.checksum
+    })
+    .catch(() => {
+      gutil.log(gutil.colors.cyan(`[Lex] Bot "${bot.name}" does not exist`))
+      gutil.log(gutil.colors.cyan(`[Lex] Creating bot "${bot.name}"`))
+    })
 
-  gutil.log(gutil.colors.cyan(`[Lex] Creating bot "${bot.name}"`))
-  if (existingBot) {
-    gutil.log(gutil.colors.cyan(`[Lex] Bot "${bot.name}" already exists, updating`))
-    bot.checksum = existingBot.checksum
-  }
-
-  await lexModelBuildingService.putBot(bot).promise()
+  return lexModelBuildingService.putBot(bot).promise()
 }
 
 export default provisionLex
