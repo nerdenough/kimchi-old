@@ -11,7 +11,7 @@ async function provisionLex () {
     const existingIntent = await lexModelBuildingService.getIntent({
       name: intent.name,
       version: '$LATEST'
-    }).promise()
+    }).promise().catch((err) => gutil.log(gutil.colors.red(`[Lex] ${err.message}`)))
 
     gutil.log(gutil.colors.cyan(`[Lex] Creating intent "${intent.name}"`))
     if (existingIntent) {
@@ -27,7 +27,7 @@ async function provisionLex () {
   const existingBot = await lexModelBuildingService.getBot({
     name: 'kimchi',
     versionOrAlias: '$LATEST'
-  }).promise()
+  }).promise().catch((err) => gutil.log(gutil.colors.red(`[Lex] ${err.message}`)))
 
   gutil.log(gutil.colors.cyan(`[Lex] Creating bot "${bot.name}"`))
   if (existingBot) {
