@@ -2,9 +2,9 @@
 import Discord from 'discord.js'
 import sinon from 'sinon'
 import { expect } from 'chai'
-import { initialise } from '../src/bot'
+import { initialise } from '../src/index'
 
-describe('Bot', () => {
+describe('Index', () => {
   describe('#initialise', () => {
     let clientOnStub
     let clientLoginStub
