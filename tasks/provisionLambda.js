@@ -12,7 +12,7 @@ async function provisionLambda () {
   const lambda = new AWS.Lambda()
 
   const zip = new JSZip()
-  zip.file('index.js', fs.readFileSync(path.join(__dirname, '../lambda/index.js')))
+  zip.file('index.js', fs.readFileSync(path.join(__dirname, '../src/lambda/index.js')))
   const code = await zip.generateAsync({ type: 'arraybuffer' })
 
   const functionName = `${botName}MessageHandler`

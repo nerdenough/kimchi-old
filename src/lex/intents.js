@@ -2,7 +2,7 @@ import config from 'config'
 const botName = config.get('bot.name')
 
 const intents = [{
-  name: 'Greeting',
+  name: 'greeting',
   sampleUtterances: [
     `Hey ${botName}`,
     `Hi ${botName}`,

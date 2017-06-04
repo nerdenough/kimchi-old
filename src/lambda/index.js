@@ -7,7 +7,7 @@ exports.handler = (event, context, callback) => {
       fulfillmentState: 'Fulfilled',
       message: {
         contentType: 'PlainText',
-        content: JSON.stringify(event || '')
+        content: JSON.stringify(event)
       }
     }
   })

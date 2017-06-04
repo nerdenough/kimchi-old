@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk'
 import gutil from 'gulp-util'
-import bot from '../lex/bot'
-import intents from '../lex/intents'
+import bot from '../src/lex/bot'
+import intents from '../src/lex/intents'
 
 async function provisionLex () {
   const lexModelBuildingService = new AWS.LexModelBuildingService()

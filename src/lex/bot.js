@@ -5,7 +5,7 @@ const bot = {
   locale: 'en-US',
   name: config.get('bot.name'),
   intents: [{
-    intentName: 'Greeting',
+    intentName: 'greeting',
     intentVersion: '$LATEST'
   }],
   processBehavior: 'BUILD',
