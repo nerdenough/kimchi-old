@@ -2,7 +2,7 @@ import AWS from 'aws-sdk'
 import config from 'config'
 
 export async function handleMessage (message, client) {
-  if (message.author.id === client.user.id) {
+  if (message.author.id === client.user.id || !message.isMentioned(client.user.id)) {
     return
   }
 
@@ -11,7 +11,7 @@ export async function handleMessage (message, client) {
     botName: config.get('bot.name'),
     botAlias: config.get('bot.alias'),
     userId: config.get('bot.userId'),
-    inputText: message.content
+    inputText: message.cleanContent
   }
 
   try {

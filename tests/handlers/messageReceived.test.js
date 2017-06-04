@@ -26,6 +26,28 @@ describe('Message Received', () => {
       it('does not send a reply to the user', () => expect(messageReplySpy).to.not.have.been.called)
     })
 
+    describe('when the bot is not mentioned', () => {
+      let lexRuntimeSpy = sinon.spy()
+      let messageReplySpy = sinon.spy()
+
+      before(() => {
+        AWS.mock('LexRuntime', 'postText', Promise.resolve({ message: 'Hello!' }))
+        handleMessage({
+          author: { id: 1 },
+          reply: messageReplySpy,
+          cleanContent: 'foobar',
+          isMentioned: () => false
+        }, { user: { id: 2 } })
+      })
+
+      after(() => {
+        AWS.restore('LexRuntime', 'postText')
+      })
+
+      it('does not post the message to lex', () => expect(lexRuntimeSpy).to.not.have.been.called)
+      it('does not send a reply to the user', () => expect(messageReplySpy).to.not.have.been.called)
+    })
+
     describe('when the message author is not the bot', () => {
       let messageReplySpy = sinon.spy()
 
@@ -34,7 +56,8 @@ describe('Message Received', () => {
         handleMessage({
           author: { id: 1 },
           reply: messageReplySpy,
-          content: 'foobar'
+          cleanContent: 'foobar',
+          isMentioned: () => true
         }, { user: { id: 2 } })
       })
 
