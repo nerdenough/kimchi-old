@@ -1,13 +1,14 @@
 import config from 'config'
+import { intents } from './intents'
 
 const bot = {
   childDirected: false,
   locale: 'en-US',
   name: config.get('bot.name'),
-  intents: [{
-    intentName: 'greeting',
+  intents: intents.map((intent) => ({
+    intentName: intent.name,
     intentVersion: '$LATEST'
-  }],
+  })),
   processBehavior: 'BUILD',
   abortStatement: {
     messages: [{

@@ -1,21 +1,17 @@
-import config from 'config'
-const botName = config.get('bot.name')
+import greetingIntent from './intents/greeting'
 
-const intents = [{
-  name: 'greeting',
-  sampleUtterances: [
-    `Hey ${botName}`,
-    `Hi ${botName}`,
-    `Hello ${botName}`,
-    `Yo ${botName}`
-  ],
-  fulfillmentActivity: {
+export const intents = [greetingIntent]
+
+const intentsWithFulfillment = intents.map((intent) => {
+  intent.fulfillmentActivity = {
     type: 'CodeHook',
     codeHook: {
       messageVersion: '1.0',
       uri: process.env.AWS_LAMBDA_ARN
     }
   }
-}]
 
-export default intents
+  return intent
+})
+
+export default intentsWithFulfillment
