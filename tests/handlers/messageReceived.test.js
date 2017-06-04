@@ -2,9 +2,29 @@
 import AWS from 'aws-sdk-mock'
 import sinon from 'sinon'
 import { expect } from 'chai'
-import { handleMessage } from '../../src/handlers/messageReceived'
+import { generateResponse, handleMessage } from '../../src/handlers/messageReceived'
+import { intents } from '../../src/lex/intents'
 
 describe('Message Received', () => {
+  describe('#generateResponse', () => {
+    let intentSpy = sinon.spy()
+    const message = {
+      currentIntent: {
+        slots: {}
+      }
+    }
+
+    before(() => {
+      sinon.stub(intents, 'find').returns({
+        getResponse: intentSpy
+      })
+
+      generateResponse(message)
+    })
+
+    it('calls getResponse() on the intent', () => expect(intentSpy).to.have.been.calledWith(message.currentIntent.slots))
+  })
+
   describe('#handleMessage', () => {
     describe('when the message author is the bot', () => {
       let lexRuntimeSpy = sinon.spy()

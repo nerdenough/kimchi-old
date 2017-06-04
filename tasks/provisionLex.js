@@ -7,6 +7,7 @@ const lexModelBuildingService = new AWS.LexModelBuildingService()
 
 async function provisionIntents () {
   return Promise.all(intents.map(async intent => {
+    delete intent.getResponse
     gutil.log(gutil.colors.cyan(`[Lex] Checking whether intent "${intent.name}" exists`))
     await lexModelBuildingService
       .getIntent({

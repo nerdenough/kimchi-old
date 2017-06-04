@@ -1,7 +1,7 @@
 import config from 'config'
 const botName = config.get('bot.name')
 
-const intent = {
+export const intent = {
   name: 'greeting',
   sampleUtterances: [
     `Hey ${botName}`,
@@ -12,7 +12,17 @@ const intent = {
     `Greetings ${botName}`,
     `Yo ${botName}`,
     `Wassup ${botName}`
-  ]
+  ],
+  getResponse: () => {
+    const responses = [
+      'hello!',
+      'hey!',
+      'greetings!',
+      'what\'s up?'
+    ]
+
+    return responses[Math.floor(Math.random() * responses.length)]
+  }
 }
 
 export default intent
